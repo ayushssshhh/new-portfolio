@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+
+        .list {
+            margin: 0 20px;
+            padding: 0;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: body;
+        }
+
+        .preview {
+            position: absolute;
+            width: 350px;
+            height: 160px;
+            overflow: hidden;
+            pointer-events: none;
+            transform-origin: center;
+            transform: scale(0);
+            z-index: 2;
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 100%;
+            background-image: url(./images/project/myweather.png);
+            background-size: cover;
+            background-position: 0 0;
+            pointer-events: none;
+        }
+
+        .list {
+            line-height: 100%;
+        }
+
+        .listContainer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .projects {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .listProject {
+            width: 100%;
+            padding: 2.5em 1em;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.353);
+            cursor: pointer;
+        }
+
+        .listProject>div {
+            flex: 3;
+        }
+
+        .listProject>div:last-child {
+            flex: 1;
+        }
+
+        #p1 {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preview">
+        <div class="preview-img"></div>
+    </div>
+
+    <div class="listContainer">
+        <div class="projects">
+            <div class="listProject" id="p1">
+                <div class="client">
+                    project
+                </div>
+                <div class="category">
+                    Category
+                </div>
+                <div class="date">
+                    Date
+                </div>
+            </div>
+
+            <div class="listProject" id="p2">
+                <div class="client">
+                    IMAGEAI
+                </div>
+                <div class="category">
+                    <p>TEXT TO IMAGE CONVERTING WEB APP</p>
+                </div>
+                <div class="date">
+                    03/23
+                </div>
+            </div>
+
+            <div class="listProject" id="p3">
+                <div class="client">
+                    MYWEATHER
+                </div>
+                <div class="category">
+                    <p>WEATHER FORECASTING WEB APP</p>
+                </div>
+                <div class="date">
+                    03/23
+                </div>
+            </div>
+
+            <div class="listProject" id="p4">
+                <div class="client">
+                    DAILYBLOG
+                </div>
+                <div class="category">
+                    <p>BLOG WEBSITE</p>
+                </div>
+                <div class="date">
+                    04/23
+                </div>
+            </div>
+
+            <div class="listProject" id="p5">
+                <div class="client">
+                    MYTODO
+                </div>
+                <div class="category">
+                    <p>MULTIUSER TODO APPLICATION</p>
+                </div>
+                <div class="date">
+                    06/23
+                </div>
+            </div>
+
+            <div class="listProject" id="p5">
+                <div class="client">
+                    MYTODO
+                </div>
+                <div class="category">
+                    <p>MULTIUSER TODO APPLICATION</p>
+                </div>
+                <div class="date">
+                    06/23
+                </div>
+            </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.3/gsap.min.js"
+            integrity="sha512-7Au1ULjlT8PP1Ygs6mDZh9NuQD0A5prSrAUiPHMXpU6g3UMd8qesVnhug5X4RoDr35x5upNpx0A6Sisz1LSTXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
+<script>
+  // desktop
+const projects = document.querySelector(".projects");
+const preview = document.querySelector(".preview");
+const previewImg = document.querySelector(".preview-img");
+let isInside = false;
+
+const bgPositions = {
+  p2 : "0 0",
+  p3 : "0 25",
+  p4 : "0 50",
+  p5 : "0 75",
+  p6 : "0 100",
+};
+
+
+const moveStuff = (e)=>{
+  const mouseInside = isMouseInsideContainer(e);
+
+  if(mouseInside !== isInside){
+    isInside = mouseInside;
+    if(isInside){
+      gsap.to(preview , 0.3 ,{
+        scale: 1
+      })
+    }
+
+    else{
+      gsap.to(preview , 0.3 ,{
+        scale: 0
+      })
+    }
+  }
+};
+
+const moveProject = (e)=>{
+  const previewRect = preview.getBoundingClientRect();
+  const offsetX = previewRect.width/2;
+  const offsetY = previewRect.height/2;
+
+  preview.computedStyleMap.left = e.pageX - offsetX + "px";
+  preview.computedStyleMap.top = e.pageY  - offsetY + "px";
+}
+
+const moveProjectImg = (project)=>{
+  const projectId = project.id;
+  gsap.to(previewImg , 0.4 ,{
+    backgroundPosition: bgPositions[projectId] || "0 0",
+  })
+}
+
+isMouseInsideContainer = (e)=>{
+  const containerRect = projects.getBoundingClientRect();
+  return(
+    e.pageX >= containerRect.left &&
+    e.pageX >= containerRect.right &&
+    e.pageY >= containerRect.top &&
+    e.pageY >= containerRect.bottom
+  )
+}
+
+window.addEventListener("mousemove" , moveStuff);
+
+Array.from(projects.children).forEach((project)=>{
+  project.addEventListener("mousemove" , moveProject);
+  project.addEventListener("mousemove" , moveProjectImg.bind(null , project))
+})
+  
+</script>
+</html>
